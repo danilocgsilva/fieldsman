@@ -1,0 +1,16 @@
+{
+    "name": "danilocgsilva/fieldsman",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Danilocgsilva\\Fieldsman\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Danilo Carlos",
+            "email": "contact@danilocgsilva.me"
+        }
+    ],
+    "require": {}
+}
