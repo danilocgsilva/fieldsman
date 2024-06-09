@@ -6,11 +6,18 @@
             "Danilocgsilva\\Fieldsman\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Danilo Carlos",
             "email": "contact@danilocgsilva.me"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^11.2"
+    }
 }
