@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Danilocgsilva\Fieldsman\Entities;
 
-class FieldEntity extends AbstractEntity
+abstract class AbstractEntity
 {
-    public const NAME = "name";
 }

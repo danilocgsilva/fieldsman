@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Danilocgsilva\Fieldsman\Repositories;
 
-use Danilocgsilva\Fieldsman\Entities\FieldEntity;
+use Danilocgsilva\Fieldsman\Entities\AbstractEntity;
 
 interface RepositoryInterface
 {
     public function all(): array;
 
-    public function getById(int $id): FieldEntity;
+    public function getById(int $id);
 
-    public function update(FieldEntity $fieldEntity): FieldEntity;
+    public function update(int $id, AbstractEntity $entity);
 
-    public function store(FieldEntity $fieldEntity): FieldEntity;
+    public function store($entity);
 
-    public function destroy(FieldEntity $fieldEntity): bool;
+    public function destroy($entity): bool;
 }
