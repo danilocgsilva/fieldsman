@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Danilocgsilva\Fieldsman\Entities;
 
-class PayloadEntity extends AbstractEntity
+class PayloadEntity
 {
     private int $id;
     

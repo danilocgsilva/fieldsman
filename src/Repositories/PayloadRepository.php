@@ -8,23 +8,20 @@ use Danilocgsilva\Fieldsman\Entities\PayloadEntity;
 
 use PDO;
 
-class PayloadRepository implements RepositoryInterface
+class PayloadRepository
 {
     public function __construct(private PDO $pdo)
     {
-        
     }
-    
+
     /**
      * @return \Danilocgsilva\Fieldsman\Entities\PayloadEntity[]
      */
     public function all(): array
     {
-        $query = "SELECT `name`, `content` FROM `payloads`;";
-        $preResults = $this->pdo->prepare($query);
-        $preResults->execute();
+        $preResults = $this->getPreResults("SELECT `name`, `content` FROM `payloads`;");
+
         /** @var \Danilocgsilva\Fieldsman\Entities\PayloadEntity[] */
-        $preResults->setFetchMode(PDO::FETCH_NUM);
         $results = [];
         while ($row = $preResults->fetch()) {
             $results[] = new PayloadEntity(
@@ -37,14 +34,12 @@ class PayloadRepository implements RepositoryInterface
 
     public function getById(int $id): PayloadEntity
     {
-        $query = "SELECT `name`, `content` FROM `payloads` WHERE id = :id;";
-        $preResults = $this->pdo->prepare($query);
-        $preResults->execute([
+        $preResults = $this->getPreResults("SELECT `name`, `content` FROM `payloads` WHERE id = :id;", [
             ':id' => $id
         ]);
-        $preResults->setFetchMode(PDO::FETCH_NUM);
+
         $row = $preResults->fetch();
-        
+
         return new PayloadEntity(
             $row[0],
             $row[1]
@@ -53,23 +48,39 @@ class PayloadRepository implements RepositoryInterface
 
     public function update(int $id, PayloadEntity $payloadEntity): PayloadEntity
     {
-        $query = "UPDATE `payloads` SET `name` = :name, `content` = :content WHERE `id` = :id;";
-        $preResults = $this->pdo->prepare($query);
-        $preResults->execute([
+        $this->getPreResults("UPDATE `payloads` SET `name` = :name, `content` = :content WHERE `id` = :id;", [
             ':name' => $payloadEntity->name,
             ':content' => $payloadEntity->content,
-            ':id' => $payloadEntity->getId(),
+            ':id' => $id,
         ]);
+
         return $payloadEntity;
     }
 
     public function store(PayloadEntity $payloadEntity): PayloadEntity
     {
-        
+        $query = "INSERT INTO `payloads` (`name`, `content`) VALUES (:name, :content);";
+        $preResults = $this->pdo->prepare($query);
+        $preResults->execute([
+            ':name' => $payloadEntity->name,
+            ':content' => $payloadEntity->content
+        ]);
+        return $payloadEntity;
     }
 
     public function destroy(PayloadEntity $payloadEntity): bool
     {
-        
+        $this->getPreResults("DELETE FROM `payloads` WHERE `id` = :id;", [
+            ':id' => $payloadEntity->getId()
+        ]);
+        return true;
+    }
+
+    private function getPreResults($query, array $fields = [])
+    {
+        $preResults = $this->pdo->prepare($query);
+        $preResults->execute($fields);
+        $preResults->setFetchMode(PDO::FETCH_NUM);
+        return $preResults;
     }
 }

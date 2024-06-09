@@ -6,7 +6,7 @@ namespace Danilocgsilva\Fieldsman\Repositories;
 
 use PDO;
 
-class FieldRepository implements RepositoryInterface
+class FieldRepository
 {
     public function __construct(private PDO $pdo)
     {
