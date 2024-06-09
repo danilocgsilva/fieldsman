@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Danilocgsilva\Fieldsman;
+namespace Danilocgsilva\Fieldsman\Repositories;
+
+use Danilocgsilva\Fieldsman\Entities\FieldEntity;
 
 interface RepositoryInterface
 {
-    /** @var \Danilocgsilva\Fieldsman\FieldEntity[] */
     public function all(): array;
 
     public function getById(int $id): FieldEntity;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Danilocgsilva\Fieldsman;
+namespace Danilocgsilva\Fieldsman\Entities;
 
 class FieldEntity
 {
