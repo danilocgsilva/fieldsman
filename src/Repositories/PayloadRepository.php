@@ -30,15 +30,16 @@ class PayloadRepository extends AbstractRepository
 
     public function getById(int $id): PayloadEntity
     {
-        $preResults = $this->getPreResults("SELECT `name`, `content` FROM `payloads` WHERE id = :id;", [
+        $preResults = $this->getPreResults("SELECT `id`, `name`, `content` FROM `payloads` WHERE id = :id;", [
             ':id' => $id
         ]);
 
         $row = $preResults->fetch();
 
         return new PayloadEntity(
-            $row[0],
-            $row[1]
+            $row[1],
+            $row[2],
+            $row[0]
         );
     }
 

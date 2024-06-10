@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Danilocgsilva\Fieldsman\Repositories;
 
-use PDO;
 use Danilocgsilva\Fieldsman\Entities\FieldEntity;
 
 class FieldRepository extends AbstractRepository
@@ -26,13 +25,14 @@ class FieldRepository extends AbstractRepository
 
     public function getById(int $id): FieldEntity
     {
-        $preResults = $this->getPreResults("SELECT `name` FROM `fields` WHERE id = :id;", [
+        $preResults = $this->getPreResults("SELECT `id`, `name` FROM `fields` WHERE id = :id;", [
             ':id' => $id
         ]);
 
         $row = $preResults->fetch();
 
         return new FieldEntity(
+            $row[1],
             $row[0]
         );
     }
@@ -47,14 +47,13 @@ class FieldRepository extends AbstractRepository
         return $fieldEntity;
     }
 
-    public function store(FieldEntity $fieldEntity): FieldEntity
+    public function store(FieldEntity $fieldEntity): void
     {
         $query = "INSERT INTO `fields` (`name`) VALUES (:name);";
         $preResults = $this->pdo->prepare($query);
         $preResults->execute([
             ':name' => $fieldEntity->name
         ]);
-        return $fieldEntity;
     }
 
     public function destroy(FieldEntity $fieldEntity): bool
