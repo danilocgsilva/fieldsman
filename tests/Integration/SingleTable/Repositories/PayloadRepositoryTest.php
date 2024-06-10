@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Repositories;
+namespace Tests\Integration\SingleTable\Repositories;
 
 use Danilocgsilva\Fieldsman\Entities\PayloadEntity;
 use Danilocgsilva\Fieldsman\Repositories\PayloadRepository;
+use Tests\Integration\RepositoryTestCase;
 
 class PayloadRepositoryTest extends RepositoryTestCase
 {
     public function test1Store(): void
     {
-        $this->resetTable("payloads");
+        self::resetTable("payloads", $this->pdo);
         $this->assertSame(0, $this->countPayloads("payloads"));
         
         $payloadRepository = new PayloadRepository($this->pdo);
@@ -34,7 +35,7 @@ EOF;
 
     public function testGetId(): void
     {
-        $this->resetTable("payloads");
+        self::resetTable("payloads", $this->pdo);
         $payloadRepository = new PayloadRepository($this->pdo);
         $this->createPayloadStore($payloadRepository);
         $storedPayload = $payloadRepository->getById(1);

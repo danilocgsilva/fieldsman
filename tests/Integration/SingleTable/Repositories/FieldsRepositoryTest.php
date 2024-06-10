@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Repositories;
+namespace Tests\Integration\SingleTable\Repositories;
 
 use Danilocgsilva\Fieldsman\Repositories\FieldRepository;
 use Danilocgsilva\Fieldsman\Entities\FieldEntity;
+use Tests\Integration\RepositoryTestCase;
 
 class FieldsRepositoryTest extends RepositoryTestCase
 {
     public function test1Store(): void
     {
-        $this->resetTable("fields");
+        self::resetTable("fields", $this->pdo);
         $this->assertSame(0, $this->countPayloads("fields"));
         
         $fieldsRepository = new FieldRepository($this->pdo);
@@ -26,7 +27,7 @@ class FieldsRepositoryTest extends RepositoryTestCase
 
     public function testFindById()
     {
-        $this->resetTable("fields");
+        self::resetTable("fields", $this->pdo);
         $this->assertSame(0, $this->countPayloads("fields"));
         
         $fieldsRepository = new FieldRepository($this->pdo);
