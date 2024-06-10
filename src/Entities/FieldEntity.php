@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Danilocgsilva\Fieldsman\Entities;
 
-class FieldEntity
+class FieldEntity extends EntityAbstract
 {
-    public const NAME = "name";
+    public function __construct(public readonly string $name)
+    {
+    }
 }

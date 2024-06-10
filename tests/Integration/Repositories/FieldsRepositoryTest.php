@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Danilocgsilva\Fieldsman\Tests\Integration\Repositories;
 
-use Danilocgsilva\Fieldsman\Entities\PayloadEntity;
-use Danilocgsilva\Fieldsman\Repositories\PayloadRepository;
+use Danilocgsilva\Fieldsman\Repositories\FieldRepository;
+use Danilocgsilva\Fieldsman\Entities\FieldEntity;
+use Danilocgsilva\Fieldsman\Tests\Integration\Repositories\Traits\RepositoriesTestsTraits;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use Danilocgsilva\Fieldsman\Tests\Integration\Repositories\Traits\RepositoriesTestsTraits;
 
-class PayloadRepositoryTest extends TestCase
+
+class FieldsRepositoryTest extends TestCase
 {
     protected PDO $pdo;
     
@@ -25,25 +26,17 @@ class PayloadRepositoryTest extends TestCase
 
     public function test1Store(): void
     {
-        $this->resetTable("payloads");
-        $this->assertSame(0, $this->countPayloads("payloads"));
+        $this->resetTable("fields");
+        $this->assertSame(0, $this->countPayloads("fields"));
         
-        $payloadRepository = new PayloadRepository($this->pdo);
+        $fieldsRepository = new FieldRepository($this->pdo);
 
-        $payloadName = "2024-05-01-120000";
-        $payloadContent = <<<EOF
-{
-    "name": "John Doe",
-    "age": "22",
-    "occupy": "develo;er",
-    "nationality": "Germany"
-}
-EOF;
+        $name = "ips";
         
-        $payload = new PayloadEntity($payloadName, $payloadContent);
-        $payloadRepository->store($payload);
+        $field = new FieldEntity($name);
+        $fieldsRepository->store($field);
 
-        $this->assertSame(1, $this->countPayloads("payloads"));
+        $this->assertSame(1, $this->countPayloads("fields"));
     }
 
     protected function countPayloads(string $tableName): int

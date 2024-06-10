@@ -8,12 +8,8 @@ use Danilocgsilva\Fieldsman\Entities\PayloadEntity;
 
 use PDO;
 
-class PayloadRepository
+class PayloadRepository extends AbstractRepository
 {
-    public function __construct(private PDO $pdo)
-    {
-    }
-
     /**
      * @return \Danilocgsilva\Fieldsman\Entities\PayloadEntity[]
      */
@@ -74,13 +70,5 @@ class PayloadRepository
             ':id' => $payloadEntity->getId()
         ]);
         return true;
-    }
-
-    private function getPreResults($query, array $fields = [])
-    {
-        $preResults = $this->pdo->prepare($query);
-        $preResults->execute($fields);
-        $preResults->setFetchMode(PDO::FETCH_NUM);
-        return $preResults;
     }
 }
