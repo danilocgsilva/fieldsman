@@ -6,8 +6,7 @@ namespace Danilocgsilva\Fieldsman\Entities;
 
 class FetchingResults
 {
-    public function __construct(private readonly int $fetchdCount)
+    public function __construct(public readonly int $fetchedCount)
     {
-        
     }
 }

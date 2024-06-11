@@ -22,9 +22,7 @@ class FieldsmanTest extends TestCase
     {
         self::resetClassTestTables();
         
-        $this->assertSame(0, self::countTableOccurrences("payloads"));
-        $this->assertSame(0, self::countTableOccurrences("fields"));
-        $this->assertSame(0, self::countTableOccurrences("field_payload"));
+        $this->assertCountPayloadFieldsFieldPayload(0, 0, 0);
 
         $pdo = RepositoryTestCase::getPdo();
 
@@ -35,18 +33,16 @@ class FieldsmanTest extends TestCase
 EOF;
         $payloadEntity = $this->setAndGetPayload($pdo, $payloadContent);
         
-        $this->assertSame(1, self::countTableOccurrences("payloads"));
-        $this->assertSame(0, self::countTableOccurrences("fields"));
-        $this->assertSame(0, self::countTableOccurrences("field_payload"));
+        $this->assertCountPayloadFieldsFieldPayload(1, 0, 0);
 
         $fieldRepository = new FieldRepository($pdo);
 
         $fieldsman = new Fieldsman($fieldRepository, new FieldPayloadRepository($pdo));
-        $fieldsman->fetchFields($payloadEntity);
+        $fetched = $fieldsman->fetchFields($payloadEntity);
 
-        $this->assertSame(1, self::countTableOccurrences("payloads"));
-        $this->assertSame(1, self::countTableOccurrences("fields"));
-        $this->assertSame(1, self::countTableOccurrences("field_payload"));
+        $this->assertSame(1, $fetched->fetchedCount);
+
+        $this->assertCountPayloadFieldsFieldPayload(1, 1, 1);
 
         $fieldCreated = $fieldRepository->getById(1);
         $this->assertSame("code", $fieldCreated->name);
@@ -56,9 +52,7 @@ EOF;
     {
         self::resetClassTestTables();
         
-        $this->assertSame(0, self::countTableOccurrences("payloads"));
-        $this->assertSame(0, self::countTableOccurrences("fields"));
-        $this->assertSame(0, self::countTableOccurrences("field_payload"));
+        $this->assertCountPayloadFieldsFieldPayload(0, 0, 0);
 
         $pdo = RepositoryTestCase::getPdo();
 
@@ -70,20 +64,25 @@ EOF;
 
         $payloadEntity = $this->setAndGetPayload($pdo, $payloadContent);
         
-        $this->assertSame(1, self::countTableOccurrences("payloads"));
-        $this->assertSame(0, self::countTableOccurrences("fields"));
-        $this->assertSame(0, self::countTableOccurrences("field_payload"));
+        $this->assertCountPayloadFieldsFieldPayload(1, 0, 0);
 
         $fieldRepository = new FieldRepository($pdo);
         $fieldsman = new Fieldsman($fieldRepository, new FieldPayloadRepository($pdo));
-        $fieldsman->fetchFields($payloadEntity);
+        $fetched = $fieldsman->fetchFields($payloadEntity);
 
-        $this->assertSame(1, self::countTableOccurrences("payloads"));
-        $this->assertSame(1, self::countTableOccurrences("fields"));
-        $this->assertSame(1, self::countTableOccurrences("field_payload"));
+        $this->assertSame(1, $fetched->fetchedCount);
+
+        $this->assertCountPayloadFieldsFieldPayload(1, 1, 1);
 
         $fieldCreated = $fieldRepository->getById(1);
         $this->assertSame("postal", $fieldCreated->name);
+    }
+
+    private function assertCountPayloadFieldsFieldPayload(int $payloadCounts, int $fieldsCount, int $fieldPayloadCount): void
+    {
+        $this->assertSame($payloadCounts, self::countTableOccurrences("payloads"));
+        $this->assertSame($fieldsCount, self::countTableOccurrences("fields"));
+        $this->assertSame($fieldPayloadCount, self::countTableOccurrences("field_payload"));
     }
 
     private function setAndGetPayload(PDO $pdo, string $content): PayloadEntity
