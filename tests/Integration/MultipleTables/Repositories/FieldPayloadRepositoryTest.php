@@ -20,7 +20,7 @@ class FieldPayloadRepositoryTest extends RepositoryTestCase
     public function test1Store(): void
     {
         self::resetFieldsPayloads($this->pdo);
-        $this->assertSame(0, $this->countTableOccurrences("field_payload", $this->pdo));
+        $this->assertSame(0, self::countTableOccurrences("field_payload"));
 
         $fieldEntity = $this->storeAndGetField();
         $payloadEntity = $this->storeAndGetPayload();
@@ -28,7 +28,7 @@ class FieldPayloadRepositoryTest extends RepositoryTestCase
 
         $fieldPayloadRepository->store(new FieldPayloadEntity($fieldEntity, $payloadEntity));
 
-        $this->assertSame(1, $this->countTableOccurrences("field_payload", $this->pdo));
+        $this->assertSame(1, self::countTableOccurrences("field_payload"));
     }
 
     private function storeAndGetPayload(): PayloadEntity

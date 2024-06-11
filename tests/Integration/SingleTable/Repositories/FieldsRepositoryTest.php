@@ -16,7 +16,7 @@ class FieldsRepositoryTest extends RepositoryTestCase
     public function test1Store(): void
     {
         self::resetTable("fields", $this->pdo);
-        $this->assertSame(0, $this->countTableOccurrences("fields", $this->pdo));
+        $this->assertSame(0, self::countTableOccurrences("fields"));
         
         $fieldsRepository = new FieldRepository($this->pdo);
 
@@ -25,13 +25,13 @@ class FieldsRepositoryTest extends RepositoryTestCase
         $field = new FieldEntity($name);
         $fieldsRepository->store($field);
 
-        $this->assertSame(1, $this->countTableOccurrences("fields", $this->pdo));
+        $this->assertSame(1, self::countTableOccurrences("fields"));
     }
 
     public function testFindById()
     {
         self::resetTable("fields", $this->pdo);
-        $this->assertSame(0, $this->countTableOccurrences("fields", $this->pdo));
+        $this->assertSame(0, self::countTableOccurrences("fields"));
         
         $fieldsRepository = new FieldRepository($this->pdo);
 

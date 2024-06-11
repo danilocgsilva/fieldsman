@@ -33,7 +33,7 @@ EOF;
         $payload = new PayloadEntity($payloadName, $payloadContent);
         $payloadRepository->store($payload);
 
-        $this->assertSame(1, $this->countTableOccurrences("payloads", $this->pdo));
+        $this->assertSame(1, self::countTableOccurrences("payloads"));
     }
 
     public function testGetId(): void
