@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS fields (
 
 CREATE TABLE IF NOT EXISTS field_payload (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    field_id INT UNSIGNED,
-    payload_id INT UNSIGNED
+    field_id INT UNSIGNED NOT NULL,
+    payload_id INT UNSIGNED NOT NULL
 ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 ALTER TABLE field_payload ADD CONSTRAINT \`field_payload_field_constaint\` FOREIGN KEY (\`field_id\`) REFERENCES fields (\`id\`);

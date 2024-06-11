@@ -11,13 +11,16 @@ use Danilocgsilva\Fieldsman\Repositories\PayloadRepository;
 use Danilocgsilva\Fieldsman\Repositories\FieldPayloadRepository; 
 use Danilocgsilva\Fieldsman\Entities\FieldPayloadEntity;
 use Tests\Integration\RepositoryTestCase;
+use Tests\Integration\DatabaseTraits\UtilsTrait;
 
 class FieldPayloadRepositoryTest extends RepositoryTestCase
 {
+    use UtilsTrait;
+    
     public function test1Store(): void
     {
         self::resetFieldsPayloads($this->pdo);
-        $this->assertSame(0, $this->countPayloads("field_payload"));
+        $this->assertSame(0, $this->countTableOccurrences("field_payload", $this->pdo));
 
         $fieldEntity = $this->storeAndGetField();
         $payloadEntity = $this->storeAndGetPayload();
@@ -25,7 +28,7 @@ class FieldPayloadRepositoryTest extends RepositoryTestCase
 
         $fieldPayloadRepository->store(new FieldPayloadEntity($fieldEntity, $payloadEntity));
 
-        $this->assertSame(1, $this->countPayloads("field_payload"));
+        $this->assertSame(1, $this->countTableOccurrences("field_payload", $this->pdo));
     }
 
     private function storeAndGetPayload(): PayloadEntity

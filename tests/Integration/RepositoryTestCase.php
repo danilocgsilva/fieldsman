@@ -16,15 +16,7 @@ class RepositoryTestCase extends TestCase
         $this->pdo = self::getPdo();
     }
 
-    protected function countPayloads(string $tableName): int
-    {
-        $queryCount = "SELECT COUNT(*) FROM %s;";
-        $preResults = $this->pdo->prepare(sprintf($queryCount, $tableName));
-        $preResults->execute();
-        $preResults->setFetchMode(PDO::FETCH_NUM);
-        $row = $preResults->fetch();
-        return $row[0];
-    }
+
 
     protected static function resetTable(string $tableName, PDO $pdo): void
     {

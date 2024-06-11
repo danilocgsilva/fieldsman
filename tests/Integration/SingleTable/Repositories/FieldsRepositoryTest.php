@@ -7,13 +7,16 @@ namespace Tests\Integration\SingleTable\Repositories;
 use Danilocgsilva\Fieldsman\Repositories\FieldRepository;
 use Danilocgsilva\Fieldsman\Entities\FieldEntity;
 use Tests\Integration\RepositoryTestCase;
+use Tests\Integration\DatabaseTraits\UtilsTrait;
 
 class FieldsRepositoryTest extends RepositoryTestCase
 {
+    use UtilsTrait;
+
     public function test1Store(): void
     {
         self::resetTable("fields", $this->pdo);
-        $this->assertSame(0, $this->countPayloads("fields"));
+        $this->assertSame(0, $this->countTableOccurrences("fields", $this->pdo));
         
         $fieldsRepository = new FieldRepository($this->pdo);
 
@@ -22,13 +25,13 @@ class FieldsRepositoryTest extends RepositoryTestCase
         $field = new FieldEntity($name);
         $fieldsRepository->store($field);
 
-        $this->assertSame(1, $this->countPayloads("fields"));
+        $this->assertSame(1, $this->countTableOccurrences("fields", $this->pdo));
     }
 
     public function testFindById()
     {
         self::resetTable("fields", $this->pdo);
-        $this->assertSame(0, $this->countPayloads("fields"));
+        $this->assertSame(0, $this->countTableOccurrences("fields", $this->pdo));
         
         $fieldsRepository = new FieldRepository($this->pdo);
 
