@@ -19,4 +19,10 @@ abstract class AbstractRepository
         $preResults->setFetchMode(PDO::FETCH_NUM);
         return $preResults;
     }
+
+    protected function getLastId(): int
+    {
+        $preResults = $this->getPreResults("SELECT LAST_INSERT_ID();");
+        return $preResults->fetch()[0];
+    }
 }

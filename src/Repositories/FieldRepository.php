@@ -47,13 +47,15 @@ class FieldRepository extends AbstractRepository
         return $fieldEntity;
     }
 
-    public function store(FieldEntity $fieldEntity): void
+    public function store(FieldEntity $fieldEntity): FieldEntity
     {
         $query = "INSERT INTO `fields` (`name`) VALUES (:name);";
         $preResults = $this->pdo->prepare($query);
         $preResults->execute([
             ':name' => $fieldEntity->name
         ]);
+        $fieldEntity->setId($this->getLastId());
+        return $fieldEntity;
     }
 
     public function destroy(FieldEntity $fieldEntity): bool

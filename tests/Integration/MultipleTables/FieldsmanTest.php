@@ -78,6 +78,40 @@ EOF;
         $this->assertSame("postal", $fieldCreated->name);
     }
 
+    public function test2FieldsFetchFields(): void
+    {
+        self::resetClassTestTables();
+        
+        $this->assertCountPayloadFieldsFieldPayload(0, 0, 0);
+
+        $pdo = RepositoryTestCase::getPdo();
+
+        $payloadContent = <<<EOF
+{
+    "Content-Length": "568",
+    "X-Real-IP": "10.158.1.61"
+}
+EOF;
+
+        $payloadEntity = $this->setAndGetPayload($pdo, $payloadContent);
+        
+        $this->assertCountPayloadFieldsFieldPayload(1, 0, 0);
+
+        $fieldRepository = new FieldRepository($pdo);
+        $fieldsman = new Fieldsman($fieldRepository, new FieldPayloadRepository($pdo));
+        $fetched = $fieldsman->fetchFields($payloadEntity);
+
+        $this->assertSame(2, $fetched->fetchedCount);
+
+        $this->assertCountPayloadFieldsFieldPayload(1, 2, 2);
+
+        $fieldCreated = $fieldRepository->getById(1);
+        $this->assertSame("Content-Length", $fieldCreated->name);
+
+        $fieldCreated = $fieldRepository->getById(2);
+        $this->assertSame("X-Real-IP", $fieldCreated->name);
+    }
+
     private function assertCountPayloadFieldsFieldPayload(int $payloadCounts, int $fieldsCount, int $fieldPayloadCount): void
     {
         $this->assertSame($payloadCounts, self::countTableOccurrences("payloads"));

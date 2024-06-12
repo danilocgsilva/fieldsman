@@ -23,9 +23,10 @@ class FieldsRepositoryTest extends RepositoryTestCase
         $name = "ips";
         
         $field = new FieldEntity($name);
-        $fieldsRepository->store($field);
+        $justCreatedField = $fieldsRepository->store($field);
 
         $this->assertSame(1, self::countTableOccurrences("fields"));
+        $this->assertSame(1, $justCreatedField->getId());
     }
 
     public function testFindById()
