@@ -65,4 +65,12 @@ class FieldRepository extends AbstractRepository
         ]);
         return true;
     }
+
+    public function existsByName(string $name): bool
+    {
+        $query = "SELECT `name` FROM `fields` WHERE `name` = :name;";
+        $preResults = $this->getPreResults($query, [':name' => $name]);
+        $result = $preResults->fetch();
+        return (bool) $result;
+    }
 }

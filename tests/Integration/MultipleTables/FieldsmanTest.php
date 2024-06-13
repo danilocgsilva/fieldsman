@@ -18,43 +18,43 @@ class FieldsmanTest extends TestCase
 {
     use UtilsTrait;
 
+    private FieldRepository $fieldRepository;
+
+    private PDO $pdo;
+
+    public function setUp(): void
+    {
+        $this->pdo = self::getPdo();
+        $this->fieldRepository = new FieldRepository($this->pdo);
+    }
+
     public function testCodeFetchFields(): void
     {
         self::resetClassTestTables();
-        
-        $this->assertCountPayloadFieldsFieldPayload(0, 0, 0);
-
-        $pdo = RepositoryTestCase::getPdo();
 
         $payloadContent = <<<EOF
 {
     "code": "2233dx"
 }
 EOF;
-        $payloadEntity = $this->setAndGetPayload($pdo, $payloadContent);
+        $payloadEntity = $this->setAndGetPayload($this->pdo, $payloadContent);
         
         $this->assertCountPayloadFieldsFieldPayload(1, 0, 0);
 
-        $fieldRepository = new FieldRepository($pdo);
-
-        $fieldsman = new Fieldsman($fieldRepository, new FieldPayloadRepository($pdo));
+        $fieldsman = new Fieldsman($this->fieldRepository, new FieldPayloadRepository($this->pdo));
         $fetched = $fieldsman->fetchFields($payloadEntity);
 
         $this->assertSame(1, $fetched->fetchedCount);
 
         $this->assertCountPayloadFieldsFieldPayload(1, 1, 1);
 
-        $fieldCreated = $fieldRepository->getById(1);
+        $fieldCreated = $this->fieldRepository->getById(1);
         $this->assertSame("code", $fieldCreated->name);
     }
 
     public function testPostalFetchFields(): void
     {
         self::resetClassTestTables();
-        
-        $this->assertCountPayloadFieldsFieldPayload(0, 0, 0);
-
-        $pdo = RepositoryTestCase::getPdo();
 
         $payloadContent = <<<EOF
 {
@@ -62,29 +62,24 @@ EOF;
 }
 EOF;
 
-        $payloadEntity = $this->setAndGetPayload($pdo, $payloadContent);
+        $payloadEntity = $this->setAndGetPayload($this->pdo, $payloadContent);
         
         $this->assertCountPayloadFieldsFieldPayload(1, 0, 0);
 
-        $fieldRepository = new FieldRepository($pdo);
-        $fieldsman = new Fieldsman($fieldRepository, new FieldPayloadRepository($pdo));
+        $fieldsman = new Fieldsman($this->fieldRepository, new FieldPayloadRepository($this->pdo));
         $fetched = $fieldsman->fetchFields($payloadEntity);
 
         $this->assertSame(1, $fetched->fetchedCount);
 
         $this->assertCountPayloadFieldsFieldPayload(1, 1, 1);
 
-        $fieldCreated = $fieldRepository->getById(1);
+        $fieldCreated = $this->fieldRepository->getById(1);
         $this->assertSame("postal", $fieldCreated->name);
     }
 
     public function test2FieldsFetchFields(): void
     {
         self::resetClassTestTables();
-        
-        $this->assertCountPayloadFieldsFieldPayload(0, 0, 0);
-
-        $pdo = RepositoryTestCase::getPdo();
 
         $payloadContent = <<<EOF
 {
@@ -93,23 +88,48 @@ EOF;
 }
 EOF;
 
-        $payloadEntity = $this->setAndGetPayload($pdo, $payloadContent);
+        $payloadEntity = $this->setAndGetPayload($this->pdo, $payloadContent);
         
         $this->assertCountPayloadFieldsFieldPayload(1, 0, 0);
 
-        $fieldRepository = new FieldRepository($pdo);
-        $fieldsman = new Fieldsman($fieldRepository, new FieldPayloadRepository($pdo));
+        $fieldsman = new Fieldsman($this->fieldRepository, new FieldPayloadRepository($this->pdo));
         $fetched = $fieldsman->fetchFields($payloadEntity);
 
         $this->assertSame(2, $fetched->fetchedCount);
 
         $this->assertCountPayloadFieldsFieldPayload(1, 2, 2);
 
-        $fieldCreated = $fieldRepository->getById(1);
+        $fieldCreated = $this->fieldRepository->getById(1);
         $this->assertSame("Content-Length", $fieldCreated->name);
 
-        $fieldCreated = $fieldRepository->getById(2);
+        $fieldCreated = $this->fieldRepository->getById(2);
         $this->assertSame("X-Real-IP", $fieldCreated->name);
+    }
+
+    public function testRepeatFetchFields(): void
+    {
+        self::resetClassTestTables();
+
+        $payloadContent = <<<EOF
+{
+    "Connection": "keep-alive"
+}
+EOF;
+
+        $payloadEntity = $this->setAndGetPayload($this->pdo, $payloadContent);
+        
+        $this->assertCountPayloadFieldsFieldPayload(1, 0, 0);
+
+        $fieldsman = new Fieldsman($this->fieldRepository, new FieldPayloadRepository($this->pdo));
+        $fetched = $fieldsman->fetchFields($payloadEntity);
+
+        $this->assertSame(1, $fetched->fetchedCount);
+        $this->assertCountPayloadFieldsFieldPayload(1, 1, 1);
+
+        $fetchedAgain = $fieldsman->fetchFields($payloadEntity);
+        $this->assertCountPayloadFieldsFieldPayload(1, 1, 1);
+
+        $this->assertSame(0, $fetchedAgain->fetchedCount);
     }
 
     private function assertCountPayloadFieldsFieldPayload(int $payloadCounts, int $fieldsCount, int $fieldPayloadCount): void

@@ -22,11 +22,15 @@ class Fieldsman
         $jsonPayload = $payloadEntity->content;
         $payloadData = json_decode($jsonPayload, true);
         $keys = array_keys($payloadData);
+        $exclusiveKeys = 0;
 
         foreach ($keys as $key) {
-            $newFieldEntity = $this->fieldRepository->store(new FieldEntity($key));
-            $this->fieldPayloadRepository->store(new FieldPayloadEntity($newFieldEntity, $payloadEntity));
+            if (!$this->fieldRepository->existsByName($key)) {
+                $newFieldEntity = $this->fieldRepository->store(new FieldEntity($key));
+                $exclusiveKeys++;
+                $this->fieldPayloadRepository->store(new FieldPayloadEntity($newFieldEntity, $payloadEntity));
+            }
         }
-        return new FetchingResults(count($keys));
+        return new FetchingResults($exclusiveKeys);
     }
 }
