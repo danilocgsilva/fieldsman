@@ -16,6 +16,8 @@ class Create
         $databaseScriptSpitter = $this->getDatabaseScriptSpitter($databaseName);
 
         $payloadTableScriptSpitter = $this->getTableScriptSpitterPayloads();
+
+        $fieldsTableScriptSpitter = $this->getTableScriptSpitterfields();
     }
 
     private function getDatabaseScriptSpitter(string $databaseName): DatabaseScriptSpitter
@@ -38,8 +40,8 @@ class Create
                     ->setAutoIncrement()
             )
             ->addField(
-                (new FieldScriptSpitter("content"))
-                    ->setType("TEXT")
+                (new FieldScriptSpitter("name"))
+                    ->setType("VARCHAR(255)")
             )
             ->addField(
                 (new FieldScriptSpitter("content"))
