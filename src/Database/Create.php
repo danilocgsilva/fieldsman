@@ -18,6 +18,8 @@ class Create
         $payloadTableScriptSpitter = $this->getTableScriptSpitterPayloads();
 
         $fieldsTableScriptSpitter = $this->getTableScriptSpitterfields();
+
+        $fieldsPayloadTableScriptSpitter = $this->getTableScriptSpitterFieldPayload();
     }
 
     private function getDatabaseScriptSpitter(string $databaseName): DatabaseScriptSpitter
@@ -46,6 +48,56 @@ class Create
             ->addField(
                 (new FieldScriptSpitter("content"))
                     ->setType("TEXT")
-            );
+            )
+            ->setCharSet("utf8mb4")
+            ->setCollateSuffix("general_ci");
+    }
+
+    private function getTableScriptSpitterfields(): TableScriptSpitter
+    {
+        return (new TableScriptSpitter("fields"))
+            ->createIfNotExists()
+            ->addField(
+                (new FieldScriptSpitter("id"))
+                    ->setUnsigned()
+                    ->setNotNull()
+                    ->setAutoIncrement()
+                    ->setPrimaryKey()
+                    ->setType("INT")
+            )
+            ->addField(
+                (new FieldScriptSpitter("name"))
+                    ->setType("VARCHAR(255)")
+            )
+            ->setCharSet("utf8mb4")
+            ->setCollateSuffix("general_ci");
+    }
+
+    private function getTableScriptSpitterFieldPayload(): TableScriptSpitter
+    {
+        return (new TableScriptSpitter("field_payload"))
+            ->createIfNotExists()
+            ->addField(
+                (new FieldScriptSpitter("id"))
+                    ->setUnsigned()
+                    ->setNotNull()
+                    ->setAutoIncrement()
+                    ->setPrimaryKey()
+                    ->setType("INT")
+            )
+            ->addField(
+                (new FieldScriptSpitter("field_id"))
+                    ->setType("INT")
+                    ->setUnsigned()
+                    ->setNotNull()
+            )
+            ->addField(
+                (new FieldScriptSpitter("payload_id"))
+                    ->setType("INT")
+                    ->setUnsigned()
+                    ->setNotNull()
+            )
+            ->setCharSet("utf8mb4")
+            ->setCollateSuffix("general_ci");;
     }
 }
