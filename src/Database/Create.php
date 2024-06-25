@@ -7,6 +7,7 @@ namespace Danilocgsilva\Fieldsman\Database;
 use Danilocgsilva\ClassToSqlSchemaScript\TableScriptSpitter;
 use Danilocgsilva\ClassToSqlSchemaScript\DatabaseScriptSpitter;
 use Danilocgsilva\ClassToSqlSchemaScript\FieldScriptSpitter;
+use Danilocgsilva\ClassToSqlSchemaScript\ForeignKeyScriptSpitter;
 use PDO;
 
 class Create
@@ -20,6 +21,27 @@ class Create
         $fieldsTableScriptSpitter = $this->getTableScriptSpitterfields();
 
         $fieldsPayloadTableScriptSpitter = $this->getTableScriptSpitterFieldPayload();
+
+        $fieldContraint = $this->createConstraint(
+            "field_payload_field_constaint",
+            "field_payload",
+            "field_id",
+            "fields",
+            "id"
+        );
+
+        $payloadContraint = $this->createConstraint(
+            "field_payload_payload_constaint",
+            "field_payload",
+            "payload_id",
+            "payloads",
+            "id"
+        );
+
+        $databaseScriptSpitter
+            ->addTableScriptSpitter($payloadTableScriptSpitter)
+            ->addTableScriptSpitter($fieldsTableScriptSpitter)
+            ->addTableScriptSpitter($fieldsPayloadTableScriptSpitter);
     }
 
     private function getDatabaseScriptSpitter(string $databaseName): DatabaseScriptSpitter
@@ -99,5 +121,24 @@ class Create
             )
             ->setCharSet("utf8mb4")
             ->setCollateSuffix("general_ci");;
+    }
+
+    private function createConstraint(
+        string $foreignKeyName,
+        string $table,
+        string $foreignKey,
+        string $foreignTable,
+        string $foreignKeyTable
+    ): ForeignKeyScriptSpitter
+    {
+        $foreignKeyScriptSpitter = new ForeignKeyScriptSpitter();
+        $foreignKeyScriptSpitter
+            ->setConstraintName($foreignKeyName)
+            ->setTable($table)
+            ->setForeignKey($foreignKey)
+            ->setForeignTable($foreignTable)
+            ->setTableForeignkey($foreignKeyTable);
+
+        return $foreignKeyScriptSpitter;
     }
 }
