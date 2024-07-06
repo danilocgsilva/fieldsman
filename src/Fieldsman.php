@@ -13,9 +13,10 @@ use Danilocgsilva\Fieldsman\Repositories\FieldPayloadRepository;
 
 class Fieldsman
 {
-    public function __construct(private FieldRepository $fieldRepository, private FieldPayloadRepository $fieldPayloadRepository)
-    {
-    }
+    public function __construct(
+        private FieldRepository $fieldRepository,
+        private FieldPayloadRepository $fieldPayloadRepository
+    ) {}
     
     public function fetchFields(PayloadEntity $payloadEntity): FetchingResults
     {

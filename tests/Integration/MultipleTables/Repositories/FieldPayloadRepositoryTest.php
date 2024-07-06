@@ -6,9 +6,11 @@ namespace Tests\Integration\MultipleTables\Repositories;
 
 use Danilocgsilva\Fieldsman\Entities\FieldEntity;
 use Danilocgsilva\Fieldsman\Entities\PayloadEntity;
-use Danilocgsilva\Fieldsman\Repositories\FieldRepository;
-use Danilocgsilva\Fieldsman\Repositories\PayloadRepository;
-use Danilocgsilva\Fieldsman\Repositories\FieldPayloadRepository; 
+use Danilocgsilva\Fieldsman\Repositories\{
+    FieldRepository,
+    PayloadRepository,
+    FieldPayloadRepository
+};
 use Danilocgsilva\Fieldsman\Entities\FieldPayloadEntity;
 use Tests\Integration\RepositoryTestCase;
 use Tests\Integration\DatabaseTraits\UtilsTrait;
